@@ -98,7 +98,7 @@ Observed:
 
 ```text
 .....................................................                    [100%]
-53 passed in 17.72s
+53 passed in 20.56s
 ```
 
 The suite covers validation, determinism, batch-size stability, locale data quality,

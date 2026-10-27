@@ -3,30 +3,12 @@
 {% block content %}
 <section class="hero" aria-labelledby="hero-heading">
   <div class="hero-copy">
-    <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> Deterministic synthetic identities</p>
     <h1 id="hero-heading">Fake users that reproduce<br><span>down to the last field.</span></h1>
     <p class="hero-lede">
       Pick a locale and seed, then generate a complete contact record. Every name,
       address, coordinate, body measurement and email is created by PostgreSQL
       functions from the same reproducible identity.
     </p>
-    <ul class="hero-tags" aria-label="Key properties">
-      <li>No Faker</li>
-      <li>No Python data RNG</li>
-      <li>Stateless batches</li>
-    </ul>
-  </div>
-
-  <div class="identity-card" aria-label="Deterministic identity formula">
-    <p class="identity-label">Identity formula</p>
-    <code class="identity-code">SHA-256(locale | seed | batch | row | salt)</code>
-    <div class="identity-grid">
-      <span><b>locale</b>en_US</span>
-      <span><b>seed</b>2026</span>
-      <span><b>batch</b>0</span>
-      <span><b>row</b>0</span>
-    </div>
-    <p class="identity-note">Same inputs → same record, even after restart.</p>
   </div>
 </section>
 
@@ -40,11 +22,7 @@
 <div class="workspace-grid">
   <section class="panel generator-panel" aria-labelledby="generator-heading">
     <div class="panel-heading">
-      <div>
-        <p class="section-kicker">Batch builder</p>
-        <h2 id="generator-heading">Generate users</h2>
-      </div>
-      <span class="panel-badge">SQL API</span>
+      <h2 id="generator-heading">Generate users</h2>
     </div>
 
     <form method="post" action="{{ url_for('main.generate') }}" class="generator-form" id="generator-form" data-loading>
@@ -102,22 +80,6 @@
       </div>
     </form>
   </section>
-
-  <aside class="panel info-panel" aria-labelledby="details-heading">
-    <p class="section-kicker">What comes back</p>
-    <h2 id="details-heading">Complete, documented records</h2>
-    <ul class="feature-list">
-      <li><span aria-hidden="true">01</span><div><strong>Identity</strong>Names, optional title, full name and gender.</div></li>
-      <li><span aria-hidden="true">02</span><div><strong>Contact & address</strong>Locale-aware street line, city, region, postal code, phone and example-domain email.</div></li>
-      <li><span aria-hidden="true">03</span><div><strong>Physical profile</strong>Box–Muller height and weight, eye colour and hair colour.</div></li>
-      <li><span aria-hidden="true">04</span><div><strong>Global coordinates</strong>Uniform spherical sampling, labelled as synthetic points independent of the address.</div></li>
-    </ul>
-    <div class="info-note">
-      <strong>Why PostgreSQL?</strong>
-      The generator is a reusable SQL library. Python validates HTTP input, invokes
-      <code>sul.generate_users(...)</code>, times the call and renders the result. It never invents user values.
-    </div>
-  </aside>
 </div>
 
 {% if users is not none and meta %}
@@ -219,7 +181,7 @@
             <td data-label="Physical">
               <div>{{ row.height_cm|measure(" cm") }}</div>
               <div>{{ row.weight_kg|measure(" kg") }}</div>
-              <div class="attribute-line">{{ row.eye_color }} eyes · {{ row.hair_color }} hair</div>
+              <div class="attribute-line">{% if meta.locale == 'de_DE' %}Augen: {{ row.eye_color }} · Haare: {{ row.hair_color }}{% else %}{{ row.eye_color }} eyes · {{ row.hair_color }} hair{% endif %}</div>
             </td>
             <td data-label="Contact">
               <code class="contact-value">{{ row.phone }}</code>

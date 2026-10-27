@@ -22,7 +22,7 @@ def test_homepage_renders_with_locale_options(client) -> None:
     assert "English" in text
     assert "German" in text
     assert "Your next batch appears here" in text
-    assert "Synthetic data only" in text
+    assert "Generate users" in text
 
 
 def test_docs_and_health_render(client) -> None:
