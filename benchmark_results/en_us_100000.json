@@ -1,0 +1,53 @@
+{
+  "generated_at": "2026-10-27T18:50:25.558944+00:00",
+  "parameters": {
+    "locale": "en_US",
+    "seed": 12345,
+    "count": 100000,
+    "batch_size": 2500,
+    "batch_offset": 0,
+    "repeat": 2,
+    "warmup_batches": 1
+  },
+  "environment": {
+    "python": "3.12.16",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.41",
+    "processor": "unknown",
+    "cpu_count": 16,
+    "psycopg": "3.3.6",
+    "postgresql_server_version": "16.15",
+    "database_name": "synthetic_user_lab",
+    "os": "posix"
+  },
+  "warmup": {
+    "batches": 1,
+    "users": 2500,
+    "elapsed_seconds": 3.467325370000026,
+    "users_per_second": 721.0168453270888
+  },
+  "runs": [
+    {
+      "count": 100000,
+      "elapsed_seconds": 159.200252223,
+      "users_per_second": 628.1397083462207,
+      "batch_size": 2500
+    },
+    {
+      "count": 100000,
+      "elapsed_seconds": 164.29517928699988,
+      "users_per_second": 608.660585380381,
+      "batch_size": 2500
+    }
+  ],
+  "summary": {
+    "best_users_per_second": 628.1397083462207,
+    "median_users_per_second": 618.4001468633008,
+    "worst_users_per_second": 608.660585380381,
+    "runs": 2
+  },
+  "measurement_scope": "PostgreSQL SQL generation (including ORDER BY row_index), result transfer over the client connection and Python fetchall(). Excludes connection setup, migrations, HTML rendering and disk writes.",
+  "notes": [
+    "No benchmark result is fabricated; values come from the run above.",
+    "The application UI default batch size is smaller than the SQL limit."
+  ]
+}

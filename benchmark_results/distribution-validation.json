@@ -1,0 +1,49 @@
+{
+  "locale": "en_US",
+  "seed": 2026,
+  "statistics": {
+    "uniform": {
+      "samples": 20000,
+      "mean": 0.5029604621201488,
+      "sd": 0.288276265151633,
+      "min": 0.00028996244640595165,
+      "max": 0.9999578790863566,
+      "expected_mean": 0.5,
+      "expected_sd": 0.2886751345948129
+    },
+    "normal": {
+      "samples": 20000,
+      "mean": -0.00476904460275219,
+      "sd": 0.9949816588000191,
+      "min": -3.763459265788524,
+      "max": 3.8367663947380986,
+      "expected_mean": 0.0,
+      "expected_sd": 1.0
+    },
+    "sphere": {
+      "samples": 2000,
+      "z_mean": 0.01615685680910574,
+      "z_sd": 0.5750513770461393,
+      "equator_fraction": 0.496,
+      "uniform_latitude_equator_fraction": 0.3333333333333333,
+      "east_fraction": 0.491
+    }
+  },
+  "tolerances": {
+    "uniform_mean_abs": 0.015,
+    "uniform_sd_abs": 0.015,
+    "normal_mean_abs": 0.04,
+    "normal_sd_abs": 0.04,
+    "sphere_z_mean_abs": 0.045,
+    "sphere_z_sd_range": [
+      0.53,
+      0.62
+    ],
+    "equator_fraction_range": [
+      0.44,
+      0.56
+    ]
+  },
+  "passed": true,
+  "failures": []
+}

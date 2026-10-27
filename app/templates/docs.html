@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-head">
+  <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> SQL library reference</p>
+  <h1>How the generator works</h1>
+  <p class="page-lede">
+    The web application never invents names, addresses or measurements. It validates
+    input, calls the public PostgreSQL function, and displays the returned rows.
+  </p>
+</div>
+
+<div class="docs-layout">
+  <aside class="docs-toc" aria-labelledby="toc-heading">
+    <p id="toc-heading">On this page</p>
+    <a href="#call">Public API</a>
+    <a href="#determinism">Determinism</a>
+    <a href="#algorithms">Algorithms</a>
+    <a href="#locales">Locales & lookup data</a>
+    <a href="#http-api">HTTP & JSON</a>
+    <a href="#limits">Limits & guarantees</a>
+  </aside>
+
+  <article class="docs-content">
+    <section id="call" class="doc-section">
+      <h2>Public SQL API</h2>
+      <p>The primary entry point can be called from psql, another service, or this Flask app:</p>
+      <pre><code>SELECT *
+FROM sul.generate_users(
+    p_locale_code =&gt; 'en_US',
+    p_seed        =&gt; 12345,
+    p_batch_index =&gt; 0,
+    p_batch_size  =&gt; 10
+)
+ORDER BY row_index;</code></pre>
+      <p>
+        A single record can be regenerated without generating earlier batches:
+      </p>
+      <pre><code>SELECT *
+FROM sul.generate_user('de_DE', 12345, 7, 3);</code></pre>
+      <p>
+        The identity tuple is <code>(locale_code, seed, batch_index, row_index)</code>.
+        Batch and row indexes are zero-based. Batch size changes how many rows are
+        returned, not the identity of a row that remains in the batch.
+      </p>
+    </section>
+
+    <section id="determinism" class="doc-section">
+      <h2>Deterministic randomness</h2>
+      <p>
+        Every field derives a SHA-256 digest from a canonical string:
+      </p>
+      <pre><code>locale | seed | batch_index | row_index | field_salt</code></pre>
+      <p>
+        The first 56 bits of the digest become an unsigned integer <code>v</code>, then
+        <code>u = (v + 0.5) / 2<sup>56</sup></code>. The result is strictly inside
+        <code>(0, 1)</code>. Field salts such as <code>first_name</code>,
+        <code>latitude</code>, <code>height</code> and <code>phone_format</code> keep
+        one field's changes from shifting every other field.
+      </p>
+      <p>
+        This design does not use <code>random()</code> or <code>setseed()</code> and does
+        not depend on query plan, row order or session state. <code>pgcrypto</code> is
+        required, and migration initialization fails loudly if it is unavailable.
+      </p>
+    </section>
+
+    <section id="algorithms" class="doc-section">
+      <h2>Distribution algorithms</h2>
+      <div class="doc-cards">
+        <div class="doc-card">
+          <h3>Normal measurements</h3>
+          <p>
+            Height and weight use Box–Muller with two independently salted uniforms:
+            <code>z = sqrt(-2 ln u₁) · cos(2πu₂)</code>. Results are clamped to
+            locale/gender-specific plausible bounds. Clamping changes the tails into
+            small point masses at the limits.
+          </p>
+        </div>
+        <div class="doc-card">
+          <h3>Uniform sphere</h3>
+          <p>
+            <code>z</code> is uniform in <code>(-1, 1)</code>,
+            <code>longitude</code> is uniform in <code>[-180, 180)</code>, and
+            <code>latitude = degrees(asin(z))</code>. This gives a uniform area
+            distribution and avoids the pole bias of a uniform latitude draw.
+          </p>
+        </div>
+        <div class="doc-card">
+          <h3>Weighted lookups</h3>
+          <p>
+            Locale-compatible candidates are ordered by id, cumulative weights are
+            computed in SQL, and the first cumulative value reaching
+            <code>u · total_weight</code> is selected. All tables use a shared schema
+            with a <code>locale_code</code> key.
+          </p>
+        </div>
+      </div>
+      <p class="callout">
+        Coordinates are globally uniform synthetic points. They are intentionally
+        <strong>not</strong> the real coordinates of the generated street address.
+      </p>
+    </section>
+
+    <section id="locales" class="doc-section">
+      <h2>Locales and lookup data</h2>
+      <p>
+        <code>en_US</code> and <code>de_DE</code> are seeded. Adding a locale means
+        inserting records in <code>sul.locales</code>, regions, cities, names, titles,
+        streets, phone formats, email patterns and body statistics — not rewriting a
+        route or a giant SQL branch.
+      </p>
+      <p>Check coverage directly in PostgreSQL:</p>
+      <pre><code>SELECT * FROM sul.lookup_coverage;</code></pre>
+      <p>
+        Generated email addresses use only <code>example.com</code>,
+        <code>example.net</code> and <code>example.org</code>. A deterministic
+        row-number suffix (for example <code>.001</code>) makes addresses unique
+        within a batch while keeping each record reproducible outside batch context.
+      </p>
+    </section>
+
+    <section id="http-api" class="doc-section">
+      <h2>HTTP and JSON interface</h2>
+      <p>
+        The HTML generator posts to <code>/generate</code>, <code>/next</code> and
+        <code>/previous</code>. A read-only JSON endpoint is also available:
+      </p>
+      <pre><code>GET /api/users?locale=en_US&amp;seed=12345&amp;batch_index=0&amp;batch_size=5</code></pre>
+      <p>
+        The response contains generated users plus timing metadata. There is no
+        arbitrary SQL endpoint. <a href="{{ url_for('main.health') }}">Health</a>
+        reports application, schema and extension readiness without exposing
+        credentials.
+      </p>
+    </section>
+
+    <section id="limits" class="doc-section">
+      <h2>Limits and guarantees</h2>
+      <table class="doc-table">
+        <thead><tr><th scope="col">Parameter</th><th scope="col">Rule</th></tr></thead>
+        <tbody>
+          <tr><td>Seed</td><td>Non-negative 64-bit integer</td></tr>
+          <tr><td>Batch index</td><td>0–1,000,000</td></tr>
+          <tr><td>Row index</td><td>0–9,999</td></tr>
+          <tr><td>Batch size</td><td>1–10,000 in SQL; {{ max_batch_size }} in this web UI</td></tr>
+          <tr><td>Email uniqueness</td><td>Guaranteed within a batch; not a global registry</td></tr>
+          <tr><td>Phone uniqueness</td><td>Not guaranteed</td></tr>
+          <tr><td>Address/coordinate relation</td><td>Independent by design</td></tr>
+        </tbody>
+      </table>
+      <p>
+        The generator is stateless: no generated users are stored. A public deployment
+        should apply rate limits appropriate to its host; arbitrary SQL execution is
+        never exposed.
+      </p>
+    </section>
+  </article>
+</div>
+{% endblock %}

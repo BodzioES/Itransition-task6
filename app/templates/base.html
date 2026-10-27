@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Synthetic User Lab generates reproducible fake user records entirely inside PostgreSQL.">
+  <meta name="color-scheme" content="light">
+  <title>{% if page_title %}{{ page_title }} · {% endif %}Synthetic User Lab</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script defer src="{{ url_for('static', filename='js/app.js') }}"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="nav shell" aria-label="Primary navigation">
+      <a class="brand" href="{{ url_for('main.index') }}" aria-label="Synthetic User Lab home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" role="img">
+            <path d="M7 8.5A2.5 2.5 0 0 1 9.5 6h13A2.5 2.5 0 0 1 25 8.5v15a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 7 23.5z"/>
+            <circle cx="12.5" cy="13" r="2.4"/>
+            <path d="M9 21c.6-3 1.8-4.5 3.5-4.5S15.4 18 16 21M18.5 13.5h5M18.5 17h5M18.5 20.5h3"/>
+          </svg>
+        </span>
+        <span class="brand-copy">
+          <strong>Synthetic User Lab</strong>
+          <small>SQL-native identity generator</small>
+        </span>
+      </a>
+
+      <div class="nav-links">
+        <a href="{{ url_for('main.index') }}"{% if active_page == 'generator' %} aria-current="page"{% endif %}>Generator</a>
+        <a href="{{ url_for('main.docs') }}"{% if active_page == 'docs' %} aria-current="page"{% endif %}>SQL guide</a>
+        <a href="{{ url_for('main.health') }}">Health</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content" class="shell">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <p><strong>Synthetic data only.</strong> Emails use RFC 2606 example domains; phone numbers use fictional ranges. Do not treat any record as a real person or location.</p>
+      <p class="footer-meta">Synthetic User Lab v{{ app_version }} · Flask + PostgreSQL PL/pgSQL</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,59 @@
+{
+  "generated_at": "2026-10-27T18:44:54.283066+00:00",
+  "parameters": {
+    "locale": "en_US",
+    "seed": 12345,
+    "count": 10000,
+    "batch_size": 1000,
+    "batch_offset": 0,
+    "repeat": 3,
+    "warmup_batches": 2
+  },
+  "environment": {
+    "python": "3.12.16",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.41",
+    "processor": "unknown",
+    "cpu_count": 16,
+    "psycopg": "3.3.6",
+    "postgresql_server_version": "16.15",
+    "database_name": "synthetic_user_lab",
+    "os": "posix"
+  },
+  "warmup": {
+    "batches": 2,
+    "users": 2000,
+    "elapsed_seconds": 4.877514565000183,
+    "users_per_second": 410.04490572954853
+  },
+  "runs": [
+    {
+      "count": 10000,
+      "elapsed_seconds": 19.932978939999884,
+      "users_per_second": 501.6811601567898,
+      "batch_size": 1000
+    },
+    {
+      "count": 10000,
+      "elapsed_seconds": 20.895024621999937,
+      "users_per_second": 478.582829209553,
+      "batch_size": 1000
+    },
+    {
+      "count": 10000,
+      "elapsed_seconds": 21.767407678999916,
+      "users_per_second": 459.40243080242806,
+      "batch_size": 1000
+    }
+  ],
+  "summary": {
+    "best_users_per_second": 501.6811601567898,
+    "median_users_per_second": 478.582829209553,
+    "worst_users_per_second": 459.40243080242806,
+    "runs": 3
+  },
+  "measurement_scope": "PostgreSQL SQL generation (including ORDER BY row_index), result transfer over the client connection and Python fetchall(). Excludes connection setup, migrations, HTML rendering and disk writes.",
+  "notes": [
+    "No benchmark result is fabricated; values come from the run above.",
+    "The application UI default batch size is smaller than the SQL limit."
+  ]
+}

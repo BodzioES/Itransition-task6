@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" aria-labelledby="hero-heading">
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> Deterministic synthetic identities</p>
+    <h1 id="hero-heading">Fake users that reproduce<br><span>down to the last field.</span></h1>
+    <p class="hero-lede">
+      Pick a locale and seed, then generate a complete contact record. Every name,
+      address, coordinate, body measurement and email is created by PostgreSQL
+      functions from the same reproducible identity.
+    </p>
+    <ul class="hero-tags" aria-label="Key properties">
+      <li>No Faker</li>
+      <li>No Python data RNG</li>
+      <li>Stateless batches</li>
+    </ul>
+  </div>
+
+  <div class="identity-card" aria-label="Deterministic identity formula">
+    <p class="identity-label">Identity formula</p>
+    <code class="identity-code">SHA-256(locale | seed | batch | row | salt)</code>
+    <div class="identity-grid">
+      <span><b>locale</b>en_US</span>
+      <span><b>seed</b>2026</span>
+      <span><b>batch</b>0</span>
+      <span><b>row</b>0</span>
+    </div>
+    <p class="identity-note">Same inputs → same record, even after restart.</p>
+  </div>
+</section>
+
+{% if general_error %}
+<div class="alert alert-danger" role="alert">
+  <strong>Generation is temporarily unavailable.</strong>
+  <span>{{ general_error }}</span>
+</div>
+{% endif %}
+
+<div class="workspace-grid">
+  <section class="panel generator-panel" aria-labelledby="generator-heading">
+    <div class="panel-heading">
+      <div>
+        <p class="section-kicker">Batch builder</p>
+        <h2 id="generator-heading">Generate users</h2>
+      </div>
+      <span class="panel-badge">SQL API</span>
+    </div>
+
+    <form method="post" action="{{ url_for('main.generate') }}" class="generator-form" id="generator-form" data-loading>
+      <div class="form-grid">
+        <div class="field">
+          <label for="locale">Locale</label>
+          <select id="locale" name="locale" required aria-describedby="locale-help{% if errors.get('locale') %} locale-error{% endif %}"{% if errors.get('locale') %} aria-invalid="true"{% endif %}>
+            {% for locale in locales %}
+            <option value="{{ locale.locale_code }}"{% if form.locale == locale.locale_code %} selected{% endif %}>
+              {{ locale.language_name }} · {{ locale.country_name }} ({{ locale.locale_code }})
+            </option>
+            {% endfor %}
+          </select>
+          <p class="field-help" id="locale-help">Lookup data is stored in PostgreSQL per locale.</p>
+          {% if errors.get('locale') %}<p class="field-error" id="locale-error">{{ errors.get('locale') }}</p>{% endif %}
+        </div>
+
+        <div class="field">
+          <label for="seed">Seed</label>
+          <input id="seed" name="seed" type="text" inputmode="numeric" autocomplete="off"
+                 value="{{ form.seed }}" pattern="[0-9]+" maxlength="19" required
+                 aria-describedby="seed-help{% if errors.get('seed') %} seed-error{% endif %}"
+                 {% if errors.get('seed') %}aria-invalid="true"{% endif %}>
+          <p class="field-help" id="seed-help">Non-negative integer up to {{ "{:,}".format(max_seed) }}.</p>
+          {% if errors.get('seed') %}<p class="field-error" id="seed-error">{{ errors.get('seed') }}</p>{% endif %}
+        </div>
+
+        <div class="field">
+          <label for="batch_index">Batch index</label>
+          <input id="batch_index" name="batch_index" type="text" inputmode="numeric" autocomplete="off"
+                 value="{{ form.batch_index }}" pattern="[0-9]+" maxlength="7" required
+                 aria-describedby="batch-index-help{% if errors.get('batch_index') %} batch-index-error{% endif %}"
+                 {% if errors.get('batch_index') %}aria-invalid="true"{% endif %}>
+          <p class="field-help" id="batch-index-help">Zero-based. Jump directly to any batch.</p>
+          {% if errors.get('batch_index') %}<p class="field-error" id="batch-index-error">{{ errors.get('batch_index') }}</p>{% endif %}
+        </div>
+
+        <div class="field">
+          <label for="batch_size">Batch size</label>
+          <input id="batch_size" name="batch_size" type="text" inputmode="numeric" autocomplete="off"
+                 value="{{ form.batch_size }}" pattern="[0-9]+" maxlength="5" required
+                 aria-describedby="batch-size-help{% if errors.get('batch_size') %} batch-size-error{% endif %}"
+                 {% if errors.get('batch_size') %}aria-invalid="true"{% endif %}>
+          <p class="field-help" id="batch-size-help">Web limit: {{ max_batch_size }} users per batch.</p>
+          {% if errors.get('batch_size') %}<p class="field-error" id="batch-size-error">{{ errors.get('batch_size') }}</p>{% endif %}
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" data-loading-label="Generating…">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v4M10 13v4M3 10h4M13 10h4M5.05 5.05l2.83 2.83M12.12 12.12l2.83 2.83M14.95 5.05l-2.83 2.83M7.88 12.12l-2.83 2.83"/></svg>
+          Generate batch
+        </button>
+        <a class="btn btn-secondary" href="{{ url_for('main.index') }}">Reset to defaults</a>
+      </div>
+    </form>
+  </section>
+
+  <aside class="panel info-panel" aria-labelledby="details-heading">
+    <p class="section-kicker">What comes back</p>
+    <h2 id="details-heading">Complete, documented records</h2>
+    <ul class="feature-list">
+      <li><span aria-hidden="true">01</span><div><strong>Identity</strong>Names, optional title, full name and gender.</div></li>
+      <li><span aria-hidden="true">02</span><div><strong>Contact & address</strong>Locale-aware street line, city, region, postal code, phone and example-domain email.</div></li>
+      <li><span aria-hidden="true">03</span><div><strong>Physical profile</strong>Box–Muller height and weight, eye colour and hair colour.</div></li>
+      <li><span aria-hidden="true">04</span><div><strong>Global coordinates</strong>Uniform spherical sampling, labelled as synthetic points independent of the address.</div></li>
+    </ul>
+    <div class="info-note">
+      <strong>Why PostgreSQL?</strong>
+      The generator is a reusable SQL library. Python validates HTTP input, invokes
+      <code>sul.generate_users(...)</code>, times the call and renders the result. It never invents user values.
+    </div>
+  </aside>
+</div>
+
+{% if users is not none and meta %}
+<section class="results-section" aria-labelledby="results-heading">
+  <div class="results-head">
+    <div>
+      <p class="section-kicker">Generated batch</p>
+      <h2 id="results-heading">{{ meta.locale }} · seed {{ meta.seed }}</h2>
+      <p class="results-subtitle">Zero-based batch {{ meta.batch_index }} · rows 0–{{ meta.batch_size - 1 }}</p>
+    </div>
+    <div class="batch-nav" aria-label="Batch navigation">
+      <form method="post" action="{{ url_for('main.previous_batch') }}" data-loading>
+        <input type="hidden" name="locale" value="{{ meta.locale }}">
+        <input type="hidden" name="seed" value="{{ meta.seed }}">
+        <input type="hidden" name="batch_index" value="{{ meta.batch_index }}">
+        <input type="hidden" name="batch_size" value="{{ meta.batch_size }}">
+        <button type="submit" class="btn btn-secondary btn-small" data-loading-label="Loading…"{% if not can_previous %} disabled{% endif %}>
+          <span aria-hidden="true">←</span> Previous batch
+        </button>
+      </form>
+      <form method="post" action="{{ url_for('main.next_batch') }}" data-loading>
+        <input type="hidden" name="locale" value="{{ meta.locale }}">
+        <input type="hidden" name="seed" value="{{ meta.seed }}">
+        <input type="hidden" name="batch_index" value="{{ meta.batch_index }}">
+        <input type="hidden" name="batch_size" value="{{ meta.batch_size }}">
+        <button type="submit" class="btn btn-primary btn-small" data-loading-label="Loading…"{% if not can_next %} disabled{% endif %}>
+          Next batch <span aria-hidden="true">→</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="metrics-grid">
+    <article class="metric-card">
+      <p>Batch index</p>
+      <strong>{{ meta.batch_index }}</strong>
+      <span>zero-based</span>
+    </article>
+    <article class="metric-card">
+      <p>Users returned</p>
+      <strong>{{ meta.count }}</strong>
+      <span>complete rows</span>
+    </article>
+    <article class="metric-card">
+      <p>Generation duration</p>
+      <strong>{{ "%.1f"|format(meta.duration_ms) }} <small>ms</small></strong>
+      <span>database round trip</span>
+    </article>
+    <article class="metric-card metric-accent">
+      <p>Throughput</p>
+      <strong>{{ meta.users_per_second|thousands }} <small>users/s</small></strong>
+      <span>includes row transfer</span>
+    </article>
+  </div>
+
+  <div class="table-card">
+    <div class="table-toolbar">
+      <div>
+        <h3>Generated users</h3>
+        <p>Reproducibility tuple: <code>locale · seed · batch_index · row_index</code></p>
+      </div>
+      <span class="synthetic-badge">100% synthetic</span>
+    </div>
+
+    <div class="table-scroll" tabindex="0" role="region" aria-label="Generated users table, horizontally scrollable">
+      <table class="users-table">
+        <caption class="sr-only">Synthetic users generated for {{ meta.locale }}, seed {{ meta.seed }}, batch {{ meta.batch_index }}</caption>
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Identity</th>
+            <th scope="col">Address</th>
+            <th scope="col">Physical</th>
+            <th scope="col">Contact</th>
+            <th scope="col">Coordinates</th>
+            <th scope="col">Reproducibility</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in users %}
+          <tr>
+            <td data-label="Row">
+              <span class="row-number">{{ row.row_index }}</span>
+              <span class="gender-pill">{{ row.gender }}</span>
+            </td>
+            <td data-label="Identity">
+              <div class="user-name">
+                {% if row.title %}<span class="title-prefix">{{ row.title }}</span> {% endif %}{{ row.full_name }}
+              </div>
+              <div class="name-parts">
+                {{ row.first_name }}{% if row.middle_name %} · {{ row.middle_name }}{% endif %} · {{ row.last_name }}
+              </div>
+            </td>
+            <td data-label="Address" title="{{ row.full_address }}">
+              <div class="address-primary">{{ row.street_address }}</div>
+              <div>{{ row.city }}{% if row.region_code %}, {{ row.region_code }}{% endif %} {{ row.postal_code }}</div>
+              <div class="muted">{{ row.country }}</div>
+            </td>
+            <td data-label="Physical">
+              <div>{{ row.height_cm|measure(" cm") }}</div>
+              <div>{{ row.weight_kg|measure(" kg") }}</div>
+              <div class="attribute-line">{{ row.eye_color }} eyes · {{ row.hair_color }} hair</div>
+            </td>
+            <td data-label="Contact">
+              <code class="contact-value">{{ row.phone }}</code>
+              <code class="contact-value email-value">{{ row.email }}</code>
+            </td>
+            <td data-label="Coordinates">
+              <div class="coordinate"><span>lat</span>{{ row.latitude|coord }}</div>
+              <div class="coordinate"><span>lon</span>{{ row.longitude|coord }}</div>
+              <div class="coordinate-note">synthetic · global</div>
+            </td>
+            <td data-label="Reproducibility">
+              <div class="repro-code">{{ row.locale_code }}</div>
+              <div class="repro-code">seed {{ row.seed }}</div>
+              <div class="repro-code">b{{ row.batch_index }} · r{{ row.row_index }}</div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% else %}
+<section class="empty-state" aria-labelledby="empty-heading">
+  <span class="empty-icon" aria-hidden="true">
+    <svg viewBox="0 0 48 48"><path d="M11 13a4 4 0 0 1 4-4h18a4 4 0 0 1 4 4v22a4 4 0 0 1-4 4H15a4 4 0 0 1-4-4z"/><circle cx="19" cy="20" r="3"/><path d="M14 34c.8-4.2 2.5-6.3 5-6.3s4.2 2.1 5 6.3M28 20h6M28 25h6M28 30h4"/></svg>
+  </span>
+  <div>
+    <h2 id="empty-heading">Your next batch appears here</h2>
+    <p>Set a locale, seed and batch size above. The first request generates rows 0–9 by default; use <strong>Next batch</strong> to continue the deterministic sequence.</p>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

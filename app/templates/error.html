@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="error-state" aria-labelledby="error-heading">
+  <span class="error-code">{{ status_code }}</span>
+  <div>
+    <p class="section-kicker">Request not completed</p>
+    <h1 id="error-heading">{{ heading }}</h1>
+    <p>{{ message }}</p>
+    <div class="form-actions">
+      <a class="btn btn-primary" href="{{ url_for('main.index') }}">Return to the generator</a>
+      <a class="btn btn-secondary" href="{{ url_for('main.docs') }}">Read the SQL guide</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
