@@ -1,0 +1,262 @@
+/* Batch summary, navigation and results table. */
+/* Results ----------------------------------------------------------------- */
+.results-section {
+  margin-top: 34px;
+}
+
+.results-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 22px;
+  margin-bottom: 16px;
+}
+
+.results-head h2 {
+  margin-bottom: 3px;
+  font-size: 27px;
+}
+
+.results-subtitle {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.batch-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.batch-nav form {
+  margin: 0;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.metric-card {
+  padding: 17px 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+.metric-card p {
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.metric-card strong {
+  display: block;
+  font-size: 25px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+}
+
+.metric-card strong small {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.metric-card > span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.metric-accent {
+  background: linear-gradient(145deg, #effcf8, #fff);
+  border-color: #c9eadf;
+}
+
+.metric-accent strong {
+  color: var(--teal);
+}
+
+/* Table ------------------------------------------------------------------- */
+.table-card {
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 17px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.table-toolbar h3 {
+  margin-bottom: 0;
+  font-size: 15px;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  scrollbar-color: #b8c5d8 transparent;
+}
+
+.users-table {
+  width: 100%;
+  min-width: 1030px;
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: left;
+}
+
+.users-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 11px 15px;
+  color: #53617a;
+  background: #f6f9fd;
+  border-bottom: 1px solid var(--line);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.users-table td {
+  padding: 14px 15px;
+  vertical-align: top;
+  border-bottom: 1px solid #edf1f7;
+  line-height: 1.45;
+}
+
+.users-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.users-table tbody tr:hover {
+  background: #fbfcff;
+}
+
+.users-table td:first-child {
+  width: 62px;
+}
+
+.row-number {
+  display: block;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.gender-pill {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 1px 5px;
+  color: var(--muted);
+  background: #f0f4fa;
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.user-name {
+  max-width: 210px;
+  margin-bottom: 3px;
+  font-size: 13px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.title-prefix {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.name-parts {
+  max-width: 210px;
+  color: var(--muted);
+  font-size: 10.5px;
+  overflow-wrap: anywhere;
+}
+
+.address-primary {
+  max-width: 210px;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.address-primary + div {
+  margin-top: 1px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.attribute-line {
+  max-width: 150px;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 10.5px;
+}
+
+.contact-value {
+  display: block;
+  max-width: 235px;
+  margin-bottom: 5px;
+  padding: 3px 6px;
+  overflow-wrap: anywhere;
+  color: var(--ink-soft);
+  background: #f6f8fc;
+  border: 1px solid #e8edf5;
+  border-radius: 5px;
+  font-size: 10.5px;
+}
+
+.email-value {
+  color: var(--primary);
+}
+
+.coordinate {
+  color: var(--ink-soft);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.coordinate span {
+  display: inline-block;
+  width: 23px;
+  color: var(--muted);
+}
+
+.repro-code {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  white-space: nowrap;
+}
+
+.repro-code:first-child {
+  color: var(--ink-soft);
+}
+

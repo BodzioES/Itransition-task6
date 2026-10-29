@@ -1,0 +1,171 @@
+/* Responsive and reduced-motion overrides. */
+
+/* Responsive -------------------------------------------------------------- */
+@media (max-width: 1000px) {
+  .hero {
+    padding-top: 45px;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .docs-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .docs-toc {
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .docs-toc p {
+    width: 100%;
+    margin-bottom: 3px;
+  }
+}
+
+@media (max-width: 720px) {
+  .shell {
+    width: min(100% - 26px, 1240px);
+  }
+
+  .nav {
+    min-height: 64px;
+  }
+
+  .brand-copy small {
+    display: none;
+  }
+
+  .nav-links a {
+    padding: 7px 8px;
+    font-size: 12px;
+  }
+
+  .hero {
+    padding: 34px 0 26px;
+  }
+
+  .hero h1 {
+    font-size: 38px;
+  }
+
+  .hero-lede {
+    font-size: 16px;
+  }
+
+  .generator-panel {
+    padding: 20px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .results-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .batch-nav {
+    flex-wrap: wrap;
+  }
+
+  .batch-nav form,
+  .batch-nav .btn {
+    flex: 1 1 auto;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .metric-card {
+    padding: 14px;
+  }
+
+  .metric-card strong {
+    font-size: 21px;
+  }
+
+  .table-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .empty-state {
+    align-items: flex-start;
+    padding: 22px;
+  }
+
+  .empty-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .error-state {
+    flex-direction: column;
+    gap: 12px;
+    margin: 40px auto;
+    padding: 24px;
+  }
+
+  .error-code {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 460px) {
+  .brand-copy strong {
+    font-size: 15px;
+  }
+
+  .nav-links {
+    gap: 1px;
+  }
+
+  .nav-links a {
+    padding: 6px;
+    font-size: 11px;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+
+  .page-head {
+    padding-top: 36px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
