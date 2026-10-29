@@ -214,26 +214,6 @@ main.shell {
   text-align: center;
 }
 
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  margin-bottom: 16px;
-  color: var(--primary);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.eyebrow-dot {
-  width: 7px;
-  height: 7px;
-  background: var(--teal);
-  border-radius: 50%;
-  box-shadow: 0 0 0 4px rgba(8, 127, 107, 0.12);
-}
-
 .hero h1 {
   max-width: 1000px;
   margin: 0 auto 20px;
