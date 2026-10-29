@@ -764,14 +764,6 @@ main.shell {
   color: var(--muted);
 }
 
-.coordinate-note {
-  margin-top: 4px;
-  color: var(--muted);
-  font-size: 9px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
 .repro-code {
   color: var(--muted);
   font-family: var(--mono);

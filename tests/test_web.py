@@ -45,7 +45,8 @@ def test_valid_generation_displays_table(client) -> None:
     assert "Generation duration" in text
     assert "Throughput" in text
     assert "users/s" in text
-    assert "synthetic · global" in text
+    assert "lat" in text
+    assert "lon" in text
     assert "Reproducibility" in text
     assert "seed 42" in text
 
