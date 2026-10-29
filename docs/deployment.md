@@ -177,20 +177,24 @@ PostgreSQL CPU and memory pressure.
 
 ## Render Blueprint
 
-`render.yaml` provisions a PostgreSQL database and a Docker web service:
+`render.yaml` provisions a PostgreSQL database and a Docker web service in
+`frankfurt` so both resources share a region. Change the region in the file if
+your account or audience is elsewhere.
 
 1. Push the repository to a Git provider.
 2. In Render, create a Blueprint and select the repository.
-3. Review the plan names against your current Render offering.
+3. Review the plan names against your current Render offering. If you omit
+   `plan`, Render creates the free web and database plans; free databases expire
+   after a limited period, so use a paid database plan for a long-lived demo.
 4. Confirm the database user can create `pgcrypto`.
 5. Set the health check path to `/health` (already in the Blueprint).
 6. Deploy and watch the build logs for migration output and Gunicorn startup.
 7. Open the public URL and verify `/health`, `/`, `/docs` and `/api/users`.
 
 The Blueprint generates `SECRET_KEY` and injects `DATABASE_URL` from the managed
-database. No secret is stored in the repository. Free instances may sleep; the
-first request after sleep is slower and the benchmark numbers in this repository
-do not describe that case.
+database. No secret is stored in the repository. Free web instances sleep after
+inactivity; the first request after sleep is slower and the benchmark numbers in
+this repository do not describe that case.
 
 ## Other platforms
 
