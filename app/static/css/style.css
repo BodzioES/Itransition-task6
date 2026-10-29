@@ -245,6 +245,14 @@ main.shell {
   color: var(--primary);
 }
 
+.hero-lede {
+  max-width: 760px;
+  margin: 0 auto 22px;
+  color: var(--ink-soft);
+  font-size: 18px;
+  line-height: 1.65;
+}
+
 /* Panels ------------------------------------------------------------------ */
 .workspace-grid {
   display: grid;
@@ -1029,6 +1037,10 @@ main.shell {
 
   .hero h1 {
     font-size: 38px;
+  }
+
+  .hero-lede {
+    font-size: 16px;
   }
 
   .generator-panel {
