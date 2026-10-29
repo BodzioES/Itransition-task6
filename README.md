@@ -240,7 +240,7 @@ python -m pytest -q
 Recorded result on 2026-10-29 with PostgreSQL 16.15 and Python 3.12:
 
 ```text
-53 passed in 16.88s
+53 passed in 18.51s
 ```
 
 SQL assertion scripts are independent of pytest:
