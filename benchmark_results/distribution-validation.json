@@ -21,12 +21,12 @@
       "expected_sd": 1.0
     },
     "sphere": {
-      "samples": 2000,
-      "z_mean": 0.01615685680910574,
-      "z_sd": 0.5750513770461393,
-      "equator_fraction": 0.496,
+      "samples": 5000,
+      "z_mean": 0.007625880378872135,
+      "z_sd": 0.5732909723521337,
+      "equator_fraction": 0.5042,
       "uniform_latitude_equator_fraction": 0.3333333333333333,
-      "east_fraction": 0.491
+      "east_fraction": 0.4862
     }
   },
   "tolerances": {

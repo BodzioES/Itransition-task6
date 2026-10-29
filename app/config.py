@@ -45,10 +45,8 @@ def load_config() -> dict[str, Any]:
 
     return {
         "APP_VERSION": APP_VERSION,
-        "APP_ENV": os.getenv("APP_ENV", "development"),
         "DATABASE_URL": database_url,
         "WEB_MAX_BATCH_SIZE": web_max,
-        "SQL_MAX_BATCH_SIZE": SQL_MAX_BATCH_SIZE,
         "DB_CONNECT_TIMEOUT": _read_int("DB_CONNECT_TIMEOUT", 5, 1, 60),
         "DB_STATEMENT_TIMEOUT_MS": _read_int("DB_STATEMENT_TIMEOUT_MS", 30_000, 1_000, 300_000),
         "LOG_LEVEL": os.getenv("LOG_LEVEL", "INFO").upper(),

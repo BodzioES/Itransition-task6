@@ -131,7 +131,6 @@ def _execute_request(
         "count": len(users),
         "duration_ms": elapsed * 1000.0,
         "users_per_second": len(users) / elapsed,
-        "measured_at": datetime.now(timezone.utc).isoformat(),
     }
     return _render_dashboard(
         locales=locales,

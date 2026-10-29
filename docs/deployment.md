@@ -62,7 +62,6 @@ lock, so repeated starts are safe.
 | `POSTGRES_PORT` | No | `5432` | Host-only mapping; change if 5432 is occupied |
 | `DATABASE_URL` | Yes for host runs | — | `postgresql://user:password@host:port/db` |
 | `SECRET_KEY` | Yes in production | random per process if absent | Set a stable long random value |
-| `APP_ENV` | No | `development` | Use `production` on a public host |
 | `LOG_LEVEL` | No | `INFO` | `DEBUG` is noisy; avoid in production |
 | `WEB_MAX_BATCH_SIZE` | No | `100` | Web cap, hard maximum 10,000 |
 | `DB_CONNECT_TIMEOUT` | No | `5` | Seconds |
@@ -257,7 +256,6 @@ docker compose exec -T db pg_dump -U sul -d synthetic_user_lab -Fc > backup.dump
 
 - [ ] Strong, unique `POSTGRES_PASSWORD`; never the example value.
 - [ ] Long random `SECRET_KEY`; stable across restarts.
-- [ ] `APP_ENV=production`.
 - [ ] TLS enabled at the edge; HSTS is emitted for secure requests.
 - [ ] Database not publicly reachable unless required; restrict by network/firewall.
 - [ ] `WEB_MAX_BATCH_SIZE` appropriate for the host.

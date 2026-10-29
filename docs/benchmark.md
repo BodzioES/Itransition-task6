@@ -131,10 +131,10 @@ Measured result: `"passed": true`.
 | Uniform SD | 20,000 | 0.28828 | `0.288675 ± 0.015` |
 | Normal mean | 20,000 | -0.00477 | `0 ± 0.04` |
 | Normal SD | 20,000 | 0.99498 | `1 ± 0.04` |
-| Sphere `z` mean | 2,000 | 0.01616 | `0 ± 0.055` |
-| Sphere `z` SD | 2,000 | 0.57505 | `0.53..0.62` (validator) |
-| Equator fraction (`|lat| < 30°`) | 2,000 | 0.4960 | `0.44..0.56` (validator) |
-| East longitude fraction | 2,000 | 0.4910 | `0.44..0.56` (validator) |
+| Sphere `z` mean | 5,000 | 0.00763 | `0 ± 0.045` |
+| Sphere `z` SD | 5,000 | 0.57329 | `0.53..0.62` (validator) |
+| Equator fraction (`|lat| < 30°`) | 5,000 | 0.5042 | `0.44..0.56` (validator) |
+| East longitude fraction | 5,000 | 0.4862 | `0.44..0.56` (validator) |
 
 Raw data:
 [`benchmark_results/distribution-validation.json`](../benchmark_results/distribution-validation.json)

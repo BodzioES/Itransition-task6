@@ -151,6 +151,9 @@ def main(argv: list[str] | None = None) -> int:
         with connect_with_retry(args.database_url, wait_seconds=20) as conn:
             if not args.skip_migrations:
                 apply_migrations(conn)
+            # apply_migrations leaves a read transaction open after inspecting
+            # the migration table, so commit before changing the autocommit mode.
+            conn.commit()
             conn.autocommit = True
             stats = _collect(
                 conn,

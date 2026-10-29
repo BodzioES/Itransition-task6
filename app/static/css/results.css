@@ -115,6 +115,14 @@
   scrollbar-color: #b8c5d8 transparent;
 }
 
+.table-note {
+  margin: 0;
+  padding: 10px 20px 14px;
+  color: var(--muted);
+  font-size: 12px;
+  border-top: 1px solid #edf1f7;
+}
+
 .users-table {
   width: 100%;
   min-width: 1030px;

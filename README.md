@@ -22,8 +22,8 @@ never generated in Python.
 - Uses seeded, locale-keyed lookup tables rather than per-locale SQL branches.
 - Uses RFC 2606 `example.com` / `example.net` / `example.org` email domains and
   fictional phone ranges.
-- Labels coordinates as independent synthetic points, not the coordinates of the
-  generated postal address.
+- States in the results table and SQL guide that coordinates are independent
+  synthetic points, not the coordinates of the generated postal address.
 
 ## Stack
 
@@ -140,13 +140,13 @@ behaviour.
 2. Enter a non-negative integer seed (default `2026`).
 3. Enter a zero-based batch index and a batch size (default `10`; web maximum
    `100`).
-4. Select **Generate users**.
+4. Select **Generate batch**.
 5. Use **Previous batch** / **Next batch** to move through adjacent batches with
    the same locale, seed and batch size.
 
 The result card reports the measured database-call duration and users per second.
-The table is horizontally scrollable on small screens; a synthetic-data notice is
-shown with every result.
+The table is horizontally scrollable on small screens; a note under the table
+explains that coordinates are independent synthetic points.
 
 ## HTTP API
 
@@ -237,10 +237,10 @@ $env:TEST_DATABASE_URL='postgresql://sul:YOUR_TEST_PASSWORD@localhost:54320/synt
 python -m pytest -q
 ```
 
-Recorded result on 2026-10-27 with PostgreSQL 16.15 and Python 3.12:
+Recorded result on 2026-10-29 with PostgreSQL 16.15 and Python 3.12:
 
 ```text
-53 passed in 17.72s
+53 passed in 16.88s
 ```
 
 SQL assertion scripts are independent of pytest:
@@ -261,7 +261,7 @@ distribution_tests.sql: PASS
 The Python distribution validator produced
 [`benchmark_results/distribution-validation.json`](benchmark_results/distribution-validation.json)
 with `"passed": true`: uniform mean `0.50296`, normal mean `-0.00477`, sphere
-`z` mean `0.01616` and `z` SD `0.57505`, equator fraction `0.4960`.
+`z` mean `0.00763` and `z` SD `0.57329`, equator fraction `0.5042`.
 
 ## Benchmark
 
@@ -338,7 +338,9 @@ render.yaml              Render Blueprint (deployment-ready, not deployed)
   plausible bounds.
 - Locale support is data-driven, but only `en_US` and `de_DE` are seeded and
   tested.
-- No public deployment, video recording or Git remote exists yet.
+- No public deployment or demo video exists yet. The repository is pushed to
+  <https://github.com/BodzioES/Itransition-task6>; confirm its visibility before
+  submitting.
 
 ## Documentation
 

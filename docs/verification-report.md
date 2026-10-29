@@ -7,8 +7,8 @@ was **not** done. It is a snapshot, not a substitute for re-running the commands
 
 | Item | Value |
 | --- | --- |
-| Date | 2026-10-27 |
-| Commit | Initial repository commit (see `git log -1`) |
+| Date | 2026-10-29 |
+| Commit | Audit commit (see `git log -1`) |
 | Host | Windows, Docker Desktop, WSL2 backend |
 | PostgreSQL | 16.15 |
 | Python (host) | 3.12.10 |
@@ -17,7 +17,7 @@ was **not** done. It is a snapshot, not a substitute for re-running the commands
 | Gunicorn | 26.2.0 |
 | Public deployment | **Not performed** |
 | Demo video | **Not recorded** |
-| Git remote | **Not configured** |
+| Git remote | `origin` → <https://github.com/BodzioES/Itransition-task6> (`main` pushed) |
 
 ## Docker Compose
 
@@ -98,7 +98,7 @@ Observed:
 
 ```text
 .....................................................                    [100%]
-53 passed in 20.56s
+53 passed in 16.88s
 ```
 
 The suite covers validation, determinism, batch-size stability, locale data quality,
@@ -108,7 +108,7 @@ graceful database-failure handling. Integration tests ran against a PostgreSQL
 
 ## SQL assertion scripts
 
-Run against the Compose database:
+Re-run against the Compose database during the 2026-10-29 audit:
 
 ```powershell
 docker compose cp sql/tests db:/tmp/sql-tests
@@ -135,7 +135,7 @@ distribution_tests.sql: PASS
 
 ## Distribution validation
 
-Recorded in
+Re-run during the 2026-10-29 audit and recorded in
 [`benchmark_results/distribution-validation.json`](../benchmark_results/distribution-validation.json):
 
 | Check | Measured | Result |
@@ -144,10 +144,10 @@ Recorded in
 | Uniform SD | 0.28828 | pass |
 | Normal mean (n=20,000) | -0.00477 | pass |
 | Normal SD | 0.99498 | pass |
-| Sphere `z` mean (n=2,000) | 0.01616 | pass |
-| Sphere `z` SD | 0.57505 | pass |
-| Equator fraction | 0.4960 | pass |
-| East longitude fraction | 0.4910 | pass |
+| Sphere `z` mean (n=5,000) | 0.00763 | pass |
+| Sphere `z` SD | 0.57329 | pass |
+| Equator fraction | 0.5042 | pass |
+| East longitude fraction | 0.4862 | pass |
 
 The full run reported `"passed": true` with no failures.
 
@@ -173,9 +173,10 @@ Invoke-RestMethod "http://localhost:8000/api/users?locale=en_US&seed=2026&batch_
 
 Observed:
 
-- `GET /` → `200`, page contains the generator and the “No Python data RNG” tag.
+- `GET /` → `200`, page contains the generator, both locale options and the empty
+  state.
 - `POST /generate` with `de_DE`, seed `777`, batch `2`, size `5` → `200`, results
-  table and duration/throughput metric present.
+  table, duration/throughput metric and the coordinate-independence note present.
 - Two identical API requests returned the same first row.
 - First row email for `en_US`, seed `2026`, batch `0`, row `0`:
   `lindamendoza.001@example.com`.
@@ -188,7 +189,7 @@ Observed:
 
 ## Repository audit
 
-- `git status --short` was clean after the initial commit.
+- `git status --short` was clean after the audit commit.
 - `.env` is ignored by Git and Docker build context; `.env.example` contains
   placeholders only.
 - `git grep` found no local development password, test password or private key in
@@ -196,6 +197,9 @@ Observed:
 - `git grep` found no `TODO`, `FIXME` or `XXX` markers in tracked code.
 - No Faker, NumPy or Python `random` usage exists in the generation path. Flask’s
   fallback `SECRET_KEY` uses `secrets`, which is not user-data generation.
+- The audit removed unused Flask context values, an unused extension entry, an
+  unused `os` import and the unused `APP_ENV` setting, and fixed the distribution
+  validator’s transaction/autocommit ordering.
 - The only remaining bracketed placeholders are intentional fields in the
   submission email draft.
 
@@ -213,7 +217,7 @@ conflict section.
 
 - No public deployment, hosting account, domain or TLS certificate.
 - No demo video recording.
-- No Git remote, push or GitHub release.
+- No GitHub release.
 - No one-million-user benchmark.
 - No load test with concurrent HTTP clients.
 

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-import os
 import secrets
 from decimal import Decimal
 from typing import Any
@@ -13,7 +12,7 @@ from flask import Flask, jsonify, render_template, request
 from .config import load_config
 from .db import Database
 from .routes import bp
-from .validation import MAX_BATCH_INDEX, MAX_SEED
+from .validation import MAX_SEED
 
 
 def create_app(test_config: dict[str, Any] | None = None) -> Flask:
@@ -41,7 +40,6 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
         statement_timeout_ms=app.config["DB_STATEMENT_TIMEOUT_MS"],
     )
     app.extensions["sul_database"] = database
-    app.extensions["sul_started_at"] = None
 
     app.register_blueprint(bp)
 
@@ -64,10 +62,7 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     @app.context_processor
     def inject_globals() -> dict[str, Any]:
         return {
-            "app_version": app.config["APP_VERSION"],
             "max_batch_size": app.config["WEB_MAX_BATCH_SIZE"],
-            "sql_max_batch_size": app.config["SQL_MAX_BATCH_SIZE"],
-            "max_batch_index": MAX_BATCH_INDEX,
             "max_seed": MAX_SEED,
         }
 

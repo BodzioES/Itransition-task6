@@ -25,7 +25,6 @@ services:
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       SECRET_KEY: ${SECRET_KEY:?Set SECRET_KEY in .env}
-      APP_ENV: ${APP_ENV:-production}
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
       WEB_MAX_BATCH_SIZE: ${WEB_MAX_BATCH_SIZE:-100}
       DB_CONNECT_TIMEOUT: ${DB_CONNECT_TIMEOUT:-5}

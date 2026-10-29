@@ -47,6 +47,7 @@ def test_valid_generation_displays_table(client) -> None:
     assert "users/s" in text
     assert "lat" in text
     assert "lon" in text
+    assert "Coordinates are independent synthetic points" in text
     assert "Reproducibility" in text
     assert "seed 42" in text
 
